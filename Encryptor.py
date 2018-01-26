@@ -4,42 +4,42 @@ import random
 import struct
 import os.path
 import hashlib
-import Settings
 from Crypto.Cipher import AES
 
+import Settings
 
-
-class AES256Encryptor:
+class AES256:
+    
     key = ""
     blockSize = 0
 
-    def __init__(self,pwd):
+    def __init__(self, pwd):
         if Settings.PasswordHashFunction == 'SHA256':
             self.blockSize = 32 # Block size a 32 byte ovvero a 256 bit. Usiamo AES256
             self.key = hashlib.sha256(pwd).digest(); # Da una password di dimensione variabile ne ottendo una fissa a 32 caratteri
 
-    def encryptFolder(self,filepath = "/home/alessio/PycharmProjects/MyEncryptor/test_encrypt/"):
+    def encryptFolder(self, filepath):
         if os.path.isdir(filepath):
-            for filename in os.listdir(filepath):
+            for filename in listdir(filepath):
                 if os.path.isdir(filename):
-                    self.encryptFolder(self,filename)
+                    self.encryptFolder(filename)
                 else:
-                    self.encryptFile(filepath+filename)
+                    self.encryptFile(os.path.join(filepath,filename))
         else:
             self.encryptFile(filepath)
 
-    def decryptFolder(self, filepath = "/"):
+    def decryptFolder(self, filepath):
         if os.path.isdir(filepath):
             for filename in os.listdir(filepath):
                 if os.path.isdir(filename):
-                    self.decryptFolder(self,filename)
+                    self.decryptFolder(filename)
                 else:
                     ext = os.path.splitext(filename)[1]
                     if ext == Settings.EncryptedExtension:
-                        self.decryptFile(filepath + filename)
+                        self.decryptFile(os.path.join(filepath,filename))
         else:
             self.decryptFile(filepath)
-
+            
     def encryptFile(self, in_filename, out_filename=None, chunksize=64 * 1024):
         if not out_filename:
             out_filename = in_filename + Settings.EncryptedExtension
@@ -67,7 +67,6 @@ class AES256Encryptor:
         infile.close()
         outfile.close()
         os.unlink(in_filename)
-
 
     def decryptFile(self,in_filename, out_filename=None, chunksize=24 * 1024):
         if not out_filename:
